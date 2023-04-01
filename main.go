@@ -10,8 +10,10 @@ import (
 )
 
 func main() {
+	TOKEN := os.Getenv("SERENDIP_BOT_TOKEN")
+
 	// DiscordのBot Tokenをセット
-	dg, err := discordgo.New("Bot " + os.Getenv("SERENDIP_BOT_TOKEN"))
+	dg, err := discordgo.New("Bot " + TOKEN)
 	if err != nil {
 		fmt.Println("Error creating Discord session: ", err)
 		return
