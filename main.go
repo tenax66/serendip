@@ -9,13 +9,22 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-
+	"flag"
 	"github.com/bwmarrin/discordgo"
+)
+
+var (
+	testOpt = flag.Bool("t", false, "テストコード用です。投稿する文章を表示します")
 )
 
 const endpoint = "https://ja.wikipedia.org/w/api.php"
 
 func main() {
+	flag.Parse()
+	if *testOpt {
+		return
+	}
+
 	TOKEN := os.Getenv("SERENDIP_BOT_TOKEN")
 
 	// DiscordのBot Tokenをセット
@@ -80,6 +89,7 @@ func onSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		})
 	}
 }
+
 
 // Wikipediaのランダムなページを取得する関数
 func getRandomPage() (string, string, error) {
