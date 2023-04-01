@@ -64,23 +64,25 @@ func main() {
 func onSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.ApplicationCommandData().Name == "wiki" {
 		// 取得したページのURLを返信
-		pageURL, err := getRandomPage()
+		pageTitle, pageURL, err := getRandomPage()
 		if err != nil {
 			log.Fatal("Error getting Wikipedia page: ", err)
 			return
 		}
 
+		content := pageTitle + "¥n" + pageURL
+
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: pageURL,
+				Content: content,
 			},
 		})
 	}
 }
 
 // Wikipediaのランダムなページを取得する関数
-func getRandomPage() (string, error) {
+func getRandomPage() (string, string, error) {
 	// リクエストパラメータを作成
 	params := url.Values{}
 	params.Set("action", "query")
@@ -92,23 +94,23 @@ func getRandomPage() (string, error) {
 	// APIにリクエストを送信
 	resp, err := http.Get(endpoint + "?" + params.Encode())
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	defer resp.Body.Close()
 
 	// レスポンスをパース
 	var result WikipediaAPIResult
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	// 結果を返す
 	if len(result.Query.Random) == 0 {
-		return "", fmt.Errorf("no random pages found")
+		return "", "", fmt.Errorf("no random pages found")
 	}
 
 	page := &result.Query.Random[0]
-	return "https://ja.wikipedia.org/wiki/" + url.PathEscape(page.Title), nil
+	return page.Title, "https://ja.wikipedia.org/wiki/" + url.PathEscape(page.Title), nil
 }
 
 // Wikipedia APIのレスポンスをパースするための型定義
