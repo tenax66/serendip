@@ -70,7 +70,7 @@ func onSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			return
 		}
 
-		content := pageTitle + "¥n" + pageURL
+		content := pageTitle + "\n" + pageURL
 
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
