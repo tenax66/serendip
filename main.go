@@ -118,7 +118,7 @@ func getDiscordMessage() (string, error) {
 
 	pageDetail := getTextFromHTML(rawSnippet)
 
-	content := pageTitle + "\n\n" + pageDetail + "\n\n" + pageURL
+	content := pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">"
 	return content, err
 }
 
