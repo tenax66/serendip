@@ -22,6 +22,8 @@ const endpoint = "https://ja.wikipedia.org/w/api.php"
 func main() {
 	flag.Parse()
 	if *testOpt {
+		content, _ := getDiscordMessage()
+		fmt.Println(content)
 		return
 	}
 
@@ -70,17 +72,23 @@ func main() {
 	dg.Close()
 }
 
+func getDiscordMessage () (string, error) {
+	pageTitle, pageURL, err := getRandomPage()
+	if err != nil {
+		log.Fatal("Error getting Wikipedia page: ", err)
+		return "", err
+	}
+	content := pageTitle + "\n" + pageURL
+	return content, err
+}
+
 func onSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.ApplicationCommandData().Name == "wiki" {
 		// 取得したページのURLを返信
-		pageTitle, pageURL, err := getRandomPage()
+		content, err := getDiscordMessage()
 		if err != nil {
-			log.Fatal("Error getting Wikipedia page: ", err)
 			return
 		}
-
-		content := pageTitle + "¥n" + pageURL
-
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
