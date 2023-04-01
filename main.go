@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	testOpt = flag.Bool("t", false, "テストコード用です。投稿する文章を表示します")
+	testOpt = flag.Bool("t", false, "テスト用です。投稿する文章をDiscordを経由せず表示します")
 )
 
 const endpoint = "https://ja.wikipedia.org/w/api.php"
