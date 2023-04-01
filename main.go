@@ -2,17 +2,17 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
-	"strings"
+	"github.com/bwmarrin/discordgo"
+	"golang.org/x/net/html"
 	"log"
 	"net/http"
-	"golang.org/x/net/html"
 	"net/url"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
-	"flag"
-	"github.com/bwmarrin/discordgo"
 )
 
 var (
@@ -74,25 +74,25 @@ func main() {
 	dg.Close()
 }
 
-func paramsTemplate () (url.Values) {
+func paramsTemplate() url.Values {
 	params := url.Values{}
 	params.Set("action", "query")
 	params.Set("format", "json")
 	return params
 }
 
-func getWikipediaAPI (params url.Values) (*http.Response, error) {
+func getWikipediaAPI(params url.Values) (*http.Response, error) {
 	// APIにリクエストを送信
 
 	resp, err := http.Get(endpoint + "?" + params.Encode())
 	if err != nil {
 		return resp, err
 	}
-	
+
 	return resp, err
 }
 
-func getDiscordMessage () (string, error) {
+func getDiscordMessage() (string, error) {
 	params := paramsTemplate()
 	params.Set("list", "search")
 	pageTitle, pageURL, err := getRandomPage()
@@ -101,10 +101,10 @@ func getDiscordMessage () (string, error) {
 		return "", err
 	}
 	params.Set("srsearch", pageTitle)
-	
+
 	resp, err := getWikipediaAPI(params)
 	defer resp.Body.Close()
-	
+
 	var result WikipediaSearchResult
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
@@ -137,7 +137,6 @@ func onSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		})
 	}
 }
-
 
 // Wikipediaのランダムなページを取得する関数
 func getRandomPage() (string, string, error) {
