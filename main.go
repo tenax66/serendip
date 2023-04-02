@@ -101,7 +101,7 @@ func getDiscordMessage() (string, error) {
 		return "", err
 	}
 	params.Set("srsearch", pageTitle)
-	params.Set("srlimit", 1)
+	params.Set("srlimit", "1")
 
 	resp, err := getWikipediaAPI(params)
 	defer resp.Body.Close()
@@ -110,9 +110,9 @@ func getDiscordMessage() (string, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
 	}
-
+	var content string
 	if len(result.Query.Search) == 0 {
-		content := pageTitle + "\n" + "<" + pageURL + ">"
+		content = pageTitle + "\n" + "<" + pageURL + ">"
 	} else {
 		snippet := &result.Query.Search[0].Snippet
 		rawSnippet, err := html.Parse(strings.NewReader(*snippet))
@@ -123,7 +123,7 @@ func getDiscordMessage() (string, error) {
 
 		pageDetail := getTextFromHTML(rawSnippet)
 
-		content := pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">"
+		content = pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">"
 	}
 	return content, err
 }
