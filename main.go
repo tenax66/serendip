@@ -34,7 +34,7 @@ func main() {
 	// DiscordのBot Tokenをセット
 	dg, err := discordgo.New("Bot " + TOKEN)
 	if err != nil {
-		fmt.Println("Error creating Discord session: ", err)
+		log.Println("Error creating Discord session: ", err)
 		return
 	}
 
@@ -44,7 +44,7 @@ func main() {
 	// Discordに接続
 	err = dg.Open()
 	if err != nil {
-		fmt.Println("Error opening Discord session: ", err)
+		log.Println("Error opening Discord session: ", err)
 		return
 	}
 
@@ -59,11 +59,11 @@ func main() {
 
 	_, err = dg.ApplicationCommandBulkOverwrite(dg.State.User.ID, "", commands)
 	if err != nil {
-		fmt.Println("Error registering slash commands: ", err)
+		log.Println("Error registering slash commands: ", err)
 		return
 	}
 
-	fmt.Println("Bot is now running. Press CTRL-C to exit.")
+	log.Println("Bot is now running. Press CTRL-C to exit.")
 
 	// 終了シグナルを待機
 	sc := make(chan os.Signal, 1)
