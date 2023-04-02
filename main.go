@@ -92,6 +92,21 @@ func getWikipediaAPI(params url.Values) (*http.Response, error) {
 	return resp, err
 }
 
+func makeContent(result WikipediaSearchResult, pageTitle string, pageURL string) (string, error) {
+	if len(result.Query.Search) == 0 {
+		return pageTitle + "\n" + "<" + pageURL + ">", nil
+	} else {
+		snippet := &result.Query.Search[0].Snippet
+		rawSnippet, err := html.Parse(strings.NewReader(*snippet))
+
+		if err != nil {
+			return "", err
+		}
+		pageDetail := getTextFromHTML(rawSnippet)
+		return pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">", err
+	}
+}
+
 func getDiscordMessage() (string, error) {
 	params := paramsTemplate()
 	params.Set("list", "search")
@@ -110,21 +125,7 @@ func getDiscordMessage() (string, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
 	}
-	var content string
-	if len(result.Query.Search) == 0 {
-		content = pageTitle + "\n" + "<" + pageURL + ">"
-	} else {
-		snippet := &result.Query.Search[0].Snippet
-		rawSnippet, err := html.Parse(strings.NewReader(*snippet))
-
-		if err != nil {
-			return "", err
-		}
-
-		pageDetail := getTextFromHTML(rawSnippet)
-
-		content = pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">"
-	}
+	content, err := makeContent(result, pageTitle, pageURL)
 	return content, err
 }
 
