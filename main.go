@@ -106,23 +106,20 @@ func makeContent(result WikipediaSearchResult, pageTitle string, pageURL string)
 }
 
 func getDiscordMessage() (string, error) {
-	params := paramsTemplate()
-	params.Set("list", "search")
+
 	pageTitle, pageURL, err := getRandomPage()
+
 	if err != nil {
 		log.Fatal("Error getting Wikipedia page: ", err)
 		return "", err
 	}
-	params.Set("srsearch", pageTitle)
-	params.Set("srlimit", "1")
 
-	resp, err := getWikipediaAPI(params)
-	defer resp.Body.Close()
-
-	var result WikipediaSearchResult
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+	result, err := getSearchPage(pageTitle)
+	if err != nil {
+		log.Fatal("Error getting Wikipedia details: ", err)
 		return "", err
 	}
+
 	content, err := makeContent(result, pageTitle, pageURL)
 	return content, err
 }
@@ -171,6 +168,20 @@ func getRandomPage() (string, string, error) {
 
 	page := &result.Query.Random[0]
 	return page.Title, "https://ja.wikipedia.org/wiki/" + url.PathEscape(page.Title), nil
+}
+
+func getSearchPage(pageTitle string) (WikipediaSearchResult, error) {
+	params := paramsTemplate()
+	params.Set("list", "search")
+	params.Set("srsearch", pageTitle)
+	params.Set("srlimit", "1")
+
+	resp, err := getWikipediaAPI(params)
+	defer resp.Body.Close()
+
+	var result WikipediaSearchResult
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	return result, err
 }
 
 func getTextFromHTML(n *html.Node) string {
