@@ -100,7 +100,7 @@ func makeContent(result WikipediaSearchResult, pageTitle string, pageURL string)
 		if err != nil {
 			return "", err
 		}
-		pageDetail := getTextFromHTML(rawSnippet)
+		pageDetail := removeTagFromText(rawSnippet)
 		return pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">", err
 	}
 }
@@ -184,7 +184,7 @@ func getSearchPage(pageTitle string) (WikipediaSearchResult, error) {
 	return result, err
 }
 
-func getTextFromHTML(n *html.Node) string {
+func removeTagFromText(n *html.Node) string {
 	if n.Type == html.TextNode {
 		return n.Data
 	} else if n.Type == html.ElementNode && n.Data == "script" {
@@ -193,7 +193,7 @@ func getTextFromHTML(n *html.Node) string {
 
 	var str_build strings.Builder
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		str_build.WriteString(getTextFromHTML(c))
+		str_build.WriteString(removeTagFromText(c))
 	}
 
 	return strings.Join(strings.Fields(str_build.String()), " ")
