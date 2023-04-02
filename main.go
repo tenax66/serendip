@@ -185,10 +185,9 @@ func getSearchPage(pageTitle string) (WikipediaSearchResult, error) {
 }
 
 func removeTagFromText(n *html.Node) string {
+
 	if n.Type == html.TextNode {
 		return n.Data
-	} else if n.Type == html.ElementNode && n.Data == "script" {
-		return ""
 	}
 
 	var str_build strings.Builder
