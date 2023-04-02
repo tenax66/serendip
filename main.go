@@ -191,12 +191,12 @@ func getTextFromHTML(n *html.Node) string {
 		return ""
 	}
 
-	var text string
+	var str_build strings.Builder
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		text += getTextFromHTML(c)
+		str_build.WriteString(getTextFromHTML(c))
 	}
 
-	return strings.Join(strings.Fields(text), " ")
+	return strings.Join(strings.Fields(str_build.String()), " ")
 }
 
 // Wikipedia APIのレスポンスをパースするための型定義
