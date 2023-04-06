@@ -208,7 +208,7 @@ type WikipediaRandomResult struct {
 type WikipediaSearchResult struct {
 	Query struct {
 		Search []WikipediaSnippet `json:"search"`
-	} `json: "query"`
+	} `json:"query"`
 }
 
 type WikipediaSnippet struct {
