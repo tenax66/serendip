@@ -76,7 +76,9 @@ func makeContent(result WikipediaSearchResult, pageTitle string, pageURL string)
 			return "", err
 		}
 		pageDetail := removeTagFromText(rawSnippet)
-		return pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">", err
+
+		// TODO: use something like a template
+		return "**" + pageTitle + "**" + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">", err
 	}
 }
 
