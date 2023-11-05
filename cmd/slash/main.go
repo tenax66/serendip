@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -18,7 +17,7 @@ func main() {
 	flag.Parse()
 	if *testOpt {
 		content, _ := serendip.GenerateDiscordMessage()
-		fmt.Println(content)
+		log.Println(content)
 		return
 	}
 
