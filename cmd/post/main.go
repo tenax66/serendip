@@ -38,8 +38,6 @@ func main() {
 	}
 
 	// テキストチャンネルにメッセージを投稿します
-	// TODO: 現状、405エラー
-	// https://github.com/bwmarrin/discordgo/issues/1461
 	if _, err := dg.ChannelMessageSend(channelID, message); err != nil {
 		log.Println("Error sending message:", err)
 		return
