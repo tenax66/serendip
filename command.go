@@ -35,7 +35,7 @@ func GenerateDiscordMessage() (string, error) {
 
 func OnSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.ApplicationCommandData().Name == "wiki" {
-		// 取得したページのURLを返信
+		// generate title, summary and URL for a random Wikipedia page
 		content, err := GenerateDiscordMessage()
 		if err != nil {
 			return
@@ -57,8 +57,6 @@ func paramsTemplate() url.Values {
 }
 
 func getWikipediaAPI(params url.Values) (*http.Response, error) {
-	// APIにリクエストを送信
-
 	resp, err := http.Get(endpoint + "?" + params.Encode())
 	if err != nil {
 		return resp, err
@@ -82,9 +80,9 @@ func makeContent(result WikipediaSearchResult, pageTitle string, pageURL string)
 	}
 }
 
-// Wikipediaのランダムなページを取得する関数
+// get a random page of Wikipedia
 func getRandomPage() (string, string, error) {
-	// リクエストパラメータを作成
+	// create request parameters
 	params := paramsTemplate()
 	params.Set("list", "random")
 	params.Set("rnnamespace", "0")
@@ -98,13 +96,11 @@ func getRandomPage() (string, string, error) {
 
 	defer resp.Body.Close()
 
-	// レスポンスをパース
 	var result WikipediaRandomResult
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", "", err
 	}
 
-	// 結果を返す
 	if len(result.Query.Random) == 0 {
 		return "", "", fmt.Errorf("no random pages found")
 	}
@@ -145,7 +141,7 @@ func removeTagFromText(n *html.Node) string {
 	return strings.Join(strings.Fields(str_build.String()), " ")
 }
 
-// Wikipedia APIのレスポンスをパースするための型定義
+// A struct for parsing results of Wikipedia API
 type WikipediaRandomResult struct {
 	Query struct {
 		Random []WikipediaPage `json:"random"`
@@ -162,7 +158,7 @@ type WikipediaSnippet struct {
 	Snippet string `json:"snippet"`
 }
 
-// Wikipediaのページ情報を表す型定義
+// A struct for Wikipedia page infomation
 type WikipediaPage struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`

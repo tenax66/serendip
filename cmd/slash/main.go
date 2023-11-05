@@ -11,7 +11,7 @@ import (
 	"github.com/tenax66/serendip"
 )
 
-var testOpt = flag.Bool("t", false, "テスト用です。投稿する文章をDiscordを経由せず表示します")
+var testOpt = flag.Bool("t", false, "test flag")
 
 func main() {
 	flag.Parse()
@@ -23,24 +23,24 @@ func main() {
 
 	TOKEN := os.Getenv("SERENDIP_BOT_TOKEN")
 
-	// DiscordのBot Tokenをセット
+	// set the bot token
 	dg, err := discordgo.New("Bot " + TOKEN)
 	if err != nil {
 		log.Println("Error creating Discord session: ", err)
 		return
 	}
 
-	// /wikiコマンドが送信されたときの処理を設定
+	// handling /wiki command
 	dg.AddHandler(serendip.OnSlashCommand)
 
-	// Discordに接続
+	// connect to the server
 	err = dg.Open()
 	if err != nil {
 		log.Println("Error opening Discord session: ", err)
 		return
 	}
 
-	// スラッシュコマンドの登録
+	// register slash commands
 	commands := []*discordgo.ApplicationCommand{
 		{
 			Name:        "wiki",
@@ -57,11 +57,11 @@ func main() {
 
 	log.Println("Bot is now running. Press CTRL-C to exit.")
 
-	// 終了シグナルを待機
+	// wait for signals
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
 
-	// Discordから切断
+	// disconnect
 	dg.Close()
 }
