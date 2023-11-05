@@ -36,7 +36,7 @@ func main() {
 		return
 	}
 
-	// !wikipediaコマンドが送信されたときの処理を設定
+	// /wikiコマンドが送信されたときの処理を設定
 	dg.AddHandler(onSlashCommand)
 
 	// Discordに接続
