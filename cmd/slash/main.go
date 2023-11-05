@@ -1,4 +1,4 @@
-package serendip
+package main
 
 import (
 	"flag"
@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/tenax66/serendip"
 )
 
 var testOpt = flag.Bool("t", false, "テスト用です。投稿する文章をDiscordを経由せず表示します")
@@ -16,7 +17,7 @@ var testOpt = flag.Bool("t", false, "テスト用です。投稿する文章をD
 func main() {
 	flag.Parse()
 	if *testOpt {
-		content, _ := generateDiscordMessage()
+		content, _ := serendip.GenerateDiscordMessage()
 		fmt.Println(content)
 		return
 	}
@@ -31,7 +32,7 @@ func main() {
 	}
 
 	// /wikiコマンドが送信されたときの処理を設定
-	dg.AddHandler(onSlashCommand)
+	dg.AddHandler(serendip.OnSlashCommand)
 
 	// Discordに接続
 	err = dg.Open()

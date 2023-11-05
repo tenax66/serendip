@@ -14,6 +14,41 @@ import (
 
 const endpoint = "https://ja.wikipedia.org/w/api.php"
 
+func GenerateDiscordMessage() (string, error) {
+
+	pageTitle, pageURL, err := getRandomPage()
+
+	if err != nil {
+		log.Fatal("Error getting Wikipedia page: ", err)
+		return "", err
+	}
+
+	result, err := getSearchPage(pageTitle)
+	if err != nil {
+		log.Fatal("Error getting Wikipedia details: ", err)
+		return "", err
+	}
+
+	content, err := makeContent(result, pageTitle, pageURL)
+	return content, err
+}
+
+func OnSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	if i.ApplicationCommandData().Name == "wiki" {
+		// 取得したページのURLを返信
+		content, err := GenerateDiscordMessage()
+		if err != nil {
+			return
+		}
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: content,
+			},
+		})
+	}
+}
+
 func paramsTemplate() url.Values {
 	params := url.Values{}
 	params.Set("action", "query")
@@ -44,41 +79,6 @@ func makeContent(result WikipediaSearchResult, pageTitle string, pageURL string)
 		}
 		pageDetail := removeTagFromText(rawSnippet)
 		return pageTitle + "\n\n" + pageDetail + "\n\n" + "<" + pageURL + ">", err
-	}
-}
-
-func generateDiscordMessage() (string, error) {
-
-	pageTitle, pageURL, err := getRandomPage()
-
-	if err != nil {
-		log.Fatal("Error getting Wikipedia page: ", err)
-		return "", err
-	}
-
-	result, err := getSearchPage(pageTitle)
-	if err != nil {
-		log.Fatal("Error getting Wikipedia details: ", err)
-		return "", err
-	}
-
-	content, err := makeContent(result, pageTitle, pageURL)
-	return content, err
-}
-
-func onSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	if i.ApplicationCommandData().Name == "wiki" {
-		// 取得したページのURLを返信
-		content, err := generateDiscordMessage()
-		if err != nil {
-			return
-		}
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: content,
-			},
-		})
 	}
 }
 
