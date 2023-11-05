@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/bwmarrin/discordgo"
-	"golang.org/x/net/html"
 	"log"
 	"net/http"
 	"net/url"
@@ -13,6 +11,9 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+
+	"github.com/bwmarrin/discordgo"
+	"golang.org/x/net/html"
 )
 
 var testOpt = flag.Bool("t", false, "テスト用です。投稿する文章をDiscordを経由せず表示します")
@@ -149,11 +150,12 @@ func getRandomPage() (string, string, error) {
 	params.Set("rnlimit", "1")
 
 	resp, err := getWikipediaAPI(params)
-	defer resp.Body.Close()
 
 	if err != nil {
 		return "", "", err
 	}
+
+	defer resp.Body.Close()
 
 	// レスポンスをパース
 	var result WikipediaRandomResult
