@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 
-	log.Println("Bot is now running. Press CTRL+C to exit.")
+	log.Println("Bot is now running.")
 
 	// テキストチャンネルのIDを指定してください
 	channelID := os.Getenv("SERENDIP_TEXT_CHANNEL_ID")
