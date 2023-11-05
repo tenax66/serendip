@@ -178,10 +178,14 @@ func getSearchPage(pageTitle string) (WikipediaSearchResult, error) {
 	params.Set("srsearch", pageTitle)
 	params.Set("srlimit", "1")
 
+	var result WikipediaSearchResult
+
 	resp, err := getWikipediaAPI(params)
+	if err != nil {
+		return result, err
+	}
 	defer resp.Body.Close()
 
-	var result WikipediaSearchResult
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	return result, err
 }
