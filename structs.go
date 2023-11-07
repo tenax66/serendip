@@ -25,3 +25,25 @@ type WikipediaPage struct {
 	Id    int    `json:"id"`
 	Title string `json:"title"`
 }
+
+// search results
+type SearchResult struct {
+    PrefixSearch []PrefixSearch `json:"prefixsearch"`
+}
+
+type PrefixSearch struct {
+    NS     int    `json:"ns"`
+    Title  string `json:"title"`
+    PageID int    `json:"pageid"`
+}
+
+type SearchContinue struct {
+    PSOffset int    `json:"psoffset"`
+    Continue string `json:"continue"`
+}
+
+type SearchResponse struct {
+    BatchComplete string   `json:"batchcomplete"`
+    Continue      SearchContinue `json:"continue"`
+    Query         SearchResult    `json:"query"`
+}

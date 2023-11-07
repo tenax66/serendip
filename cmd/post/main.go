@@ -29,7 +29,7 @@ func main() {
 
 	channelID := os.Getenv("SERENDIP_TEXT_CHANNEL_ID")
 
-	message, err := serendip.GenerateDiscordMessage()
+	message, err := serendip.GenerateRandomArticleMessage()
 	if err != nil {
 		log.Println("Error generating message")
 		return

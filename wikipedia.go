@@ -47,10 +47,27 @@ func GetPageContent(pageId int) (PageResult, error) {
 	params.Set("exintro", "")
 	params.Set("redirects", "1")
 	params.Set("pageids", strconv.Itoa(pageId))
-	params.Set("utf8", "")
 
 	var result PageResult
 
+	resp, err := requestWikipediaAPI(params)
+
+	if err != nil {
+		return result, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	return result, err
+}
+
+func SearchArticle(query string) (SearchResponse, error) {
+	params := createParamsTemplate()
+	params.Set("list", "prefixsearch")
+	params.Set("pssearch", query)
+	params.Set("pslimit", "3")
+
+	var result SearchResponse
 	resp, err := requestWikipediaAPI(params)
 
 	if err != nil {
@@ -66,6 +83,7 @@ func createParamsTemplate() url.Values {
 	params := url.Values{}
 	params.Set("action", "query")
 	params.Set("format", "json")
+	params.Set("utf8", "")
 	return params
 }
 

@@ -16,7 +16,7 @@ var testOpt = flag.Bool("t", false, "test flag")
 func main() {
 	flag.Parse()
 	if *testOpt {
-		content, _ := serendip.GenerateDiscordMessage()
+		content, _ := serendip.GenerateRandomArticleMessage()
 		log.Println(content)
 		return
 	}
@@ -46,6 +46,19 @@ func main() {
 			Name:        "wiki",
 			Type:        1,
 			Description: "Get a link to a random Wikipedia article.",
+		},
+		{
+			Name:        "search",
+			Type:        1,
+			Description: "Search Wikipedia articles by given search words.",
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Name:        "query",
+					Type:        3,
+					Required:    true,
+					Description: "search words",
+				},
+			},
 		},
 	}
 

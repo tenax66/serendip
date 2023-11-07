@@ -1,36 +1,14 @@
 package serendip
 
 import (
-	"log"
-	"strconv"
-
 	"github.com/bwmarrin/discordgo"
 )
-
-func GenerateDiscordMessage() (string, error) {
-
-	pageId, pageTitle, pageURL, err := GetRandomPage()
-
-	if err != nil {
-		log.Fatal("Error getting Wikipedia page: ", err)
-		return "", err
-	}
-
-	result, err := GetPageContent(pageId)
-	if err != nil {
-		log.Fatal("Error getting Wikipedia details: ", err)
-		return "", err
-	}
-
-	content := makeContent(result, pageId, pageTitle, pageURL)
-	return content, nil
-}
 
 func OnSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	n := i.ApplicationCommandData().Name
 	if n == "wiki" {
 		// generate title, summary and URL for a random Wikipedia page
-		content, err := GenerateDiscordMessage()
+		content, err := GenerateRandomArticleMessage()
 		if err != nil {
 			return
 		}
@@ -40,16 +18,28 @@ func OnSlashCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				Content: content,
 			},
 		})
+	} else if n == "search" {
+		options := i.ApplicationCommandData().Options
+
+		// convert the slice into a map
+		optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+		for _, opt := range options {
+			optionMap[opt.Name] = opt
+		}
+
+		if query, ok := optionMap["query"]; ok {
+			content, err := GenerateSearchResultMessage(query.StringValue())
+			if err != nil {
+				return
+			}
+
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: content,
+				},
+			})
+		}
 	}
 
-}
-
-func makeContent(result PageResult, pageId int, pageTitle string, pageURL string) string {
-	extract := result.Query.Pages[strconv.Itoa(pageId)].Extract
-	if len(extract) == 0 {
-		return pageTitle + "\n" + "<" + pageURL + ">"
-	} else {
-		// TODO: use something like a template
-		return "**" + pageTitle + "**" + "\n\n" + extract + "\n\n" + "<" + pageURL + ">"
-	}
 }
