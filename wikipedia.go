@@ -89,7 +89,7 @@ func createParamsTemplate() url.Values {
 
 func requestWikipediaAPI(params url.Values) (*http.Response, error) {
 	url := ENDPOINT + "?" + params.Encode()
-	log.Println("url:", url)
+	log.Println("requested url:", url)
 	resp, err := http.Get(ENDPOINT + "?" + params.Encode())
 	if err != nil {
 		return resp, err
