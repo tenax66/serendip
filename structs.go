@@ -7,18 +7,21 @@ type WikipediaRandomResult struct {
 	} `json:"query"`
 }
 
-type WikipediaSearchResult struct {
+type PageResult struct {
 	Query struct {
-		Search []WikipediaSnippet `json:"search"`
+		Pages map[string]Page `json:"pages"`
 	} `json:"query"`
 }
 
-type WikipediaSnippet struct {
-	Snippet string `json:"snippet"`
+type Page struct {
+	PageID  int    `json:"pageid"`
+	NS      int    `json:"ns"`
+	Title   string `json:"title"`
+	Extract string `json:"extract"`
 }
 
 // A struct for Wikipedia page infomation
 type WikipediaPage struct {
-	ID    int    `json:"id"`
+	Id    int    `json:"id"`
 	Title string `json:"title"`
 }
