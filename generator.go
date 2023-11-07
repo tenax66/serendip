@@ -34,6 +34,7 @@ func GenerateSearchResultMessage(query string) (string, error) {
 
 	var content string
 	for _, ps := range searchRes.Query.PrefixSearch {
+		// TODO: util method to build a content
 		content += ps.Title + "\n" + "<" + "https://ja.wikipedia.org/wiki/" + url.PathEscape(ps.Title) + ">" + "\n"
 		log.Println("content: ", content)
 	}
