@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -11,15 +10,7 @@ import (
 	"github.com/tenax66/serendip"
 )
 
-var testOpt = flag.Bool("t", false, "test flag")
-
 func main() {
-	flag.Parse()
-	if *testOpt {
-		content, _ := serendip.GenerateRandomArticleMessage()
-		log.Println(content)
-		return
-	}
 
 	TOKEN := os.Getenv("SERENDIP_BOT_TOKEN")
 
