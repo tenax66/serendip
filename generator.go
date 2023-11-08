@@ -34,8 +34,8 @@ func GenerateSearchResultMessage(query string) (string, error) {
 
 	var content string
 	for _, ps := range searchRes.Query.PrefixSearch {
-		// TODO: util method to build a content
-		content += ps.Title + "\n" + "<" + "https://ja.wikipedia.org/wiki/" + url.PathEscape(ps.Title) + ">" + "\n"
+		// pass an empty string because summary is not needed
+		content += buildPost(ps.Title, "", "https://ja.wikipedia.org/wiki/"+url.PathEscape(ps.Title))
 		log.Println("content: ", content)
 	}
 
@@ -44,10 +44,14 @@ func GenerateSearchResultMessage(query string) (string, error) {
 
 func makeContent(result PageResult, pageId int, pageTitle string, pageURL string) string {
 	extract := result.Query.Pages[strconv.Itoa(pageId)].Extract
-	if len(extract) == 0 {
-		return pageTitle + "\n" + "<" + pageURL + ">"
+	return buildPost(pageTitle, extract, pageURL)
+}
+
+// Build a discord post. This formats text using markdown.
+func buildPost(title string, text string, url string) string {
+	if text == "" {
+		return "**" + title + "**" + "\n" + "<" + url + ">"
 	} else {
-		// TODO: use something like a template
-		return "**" + pageTitle + "**" + "\n\n" + extract + "\n\n" + "<" + pageURL + ">"
+		return "**" + title + "**" + "\n\n" + "> " + text + "\n\n" + "<" + url + ">"
 	}
 }
