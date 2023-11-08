@@ -52,6 +52,6 @@ func buildPost(title string, text string, url string) string {
 	if text == "" {
 		return "**" + title + "**" + "\n" + "<" + url + ">"
 	} else {
-		return "**" + title + "**" + "\n\n" + "> " + text + "\n\n" + "<" + url + ">"
+		return "**" + title + "**" + "\n\n" + text + "\n\n" + "<" + url + ">"
 	}
 }
