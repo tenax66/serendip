@@ -45,11 +45,11 @@ func TestGenerateSearchResultMessage(t *testing.T) {
 		{
 			name: "standard",
 			args: args{"Wikipedia"},
-			want: `Wikipedia
+			want: `**Wikipedia**
 <https://ja.wikipedia.org/wiki/Wikipedia>
-Wikipedia Zero
+**Wikipedia Zero**
 <https://ja.wikipedia.org/wiki/Wikipedia%20Zero>
-Wikipedia日本語版
+**Wikipedia日本語版**
 <https://ja.wikipedia.org/wiki/Wikipedia%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88>
 `,
 			wantErr: false,

@@ -36,6 +36,7 @@ func GenerateSearchResultMessage(query string) (string, error) {
 	for _, ps := range searchRes.Query.PrefixSearch {
 		// pass an empty string because summary is not needed
 		content += buildPost(ps.Title, "", "https://ja.wikipedia.org/wiki/"+url.PathEscape(ps.Title))
+		content += "\n"
 		log.Println("content: ", content)
 	}
 
