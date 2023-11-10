@@ -10,6 +10,7 @@ import (
 )
 
 const ENDPOINT = "https://ja.wikipedia.org/w/api.php"
+const PSLIMIT = "3"
 
 // get a random page of Wikipedia
 func GetRandomPage() (int, string, string, error) {
@@ -65,7 +66,7 @@ func SearchArticle(query string) (SearchResponse, error) {
 	params := createParamsTemplate()
 	params.Set("list", "prefixsearch")
 	params.Set("pssearch", query)
-	params.Set("pslimit", "3")
+	params.Set("pslimit", PSLIMIT)
 
 	var result SearchResponse
 	resp, err := requestWikipediaAPI(params)
