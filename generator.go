@@ -50,6 +50,7 @@ func makeContent(result PageResult, pageId int, pageTitle string, pageURL string
 
 // Build a discord post. This formats text using markdown.
 func buildPost(title string, text string, url string) string {
+	// TODO: simplify this branching
 	if text == "" {
 		return "**" + title + "**" + "\n" + "<" + url + ">"
 	} else {
