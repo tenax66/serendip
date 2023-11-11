@@ -52,7 +52,7 @@ func makeContent(result PageResult, pageId int, pageTitle string, pageURL string
 func buildPost(title string, text string, url string) string {
 	// TODO: simplify this branching
 	if text == "" {
-		return "**" + title + "**" + "\n" + "<" + url + ">"
+		return title + "\n" + "<" + url + ">"
 	} else {
 		return "**" + title + "**" + "\n\n" + text + "\n\n" + "<" + url + ">"
 	}
